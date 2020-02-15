@@ -69,6 +69,9 @@ server.get("/:number", checkNumber, (req, res) => {
 
   const number = req.params.number;
 
+  /* caso seja 0 */
+  if (number == 0) return res.status(200).json({ extenso: "zero" });
+
   return res.status(200).json({ extenso: number });
 });
 
