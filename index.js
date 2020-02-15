@@ -20,9 +20,56 @@ const checkNumber = (req, res, callback) => {
 
 /* ROUTES */
 server.get("/:number", checkNumber, (req, res) => {
+  const unidades = [
+    "",
+    "um",
+    "dois",
+    "três",
+    "quatro",
+    "cinco",
+    "seis",
+    "sete",
+    "oito",
+    "nove",
+    "dez",
+    "onze",
+    "doze",
+    "treze",
+    "catorze",
+    "quize",
+    "dezesseis",
+    "dezessete",
+    "dezoito",
+    "dezenove"
+  ];
+  const dezenas = [
+    "",
+    "",
+    "vinte",
+    "trinta",
+    "quarenta",
+    "cinquenta",
+    "sessenta",
+    "setenta",
+    "oitenta",
+    "noventa"
+  ];
+  const centenas = [
+    "",
+    "cem",
+    "duzentos",
+    "trezentos",
+    "quatrocentos",
+    "quinhentos",
+    "seiscentos",
+    "setecentos",
+    "oitocentos",
+    "novecentos"
+  ];
+
   const number = req.params.number;
 
-  return res.status(200).json({ All: "Good!" });
+  return res.status(200).json({ extenso: number });
 });
 
 server.listen(3000);
