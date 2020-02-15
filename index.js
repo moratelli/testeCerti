@@ -4,22 +4,22 @@ const server = express();
 server.use(express.json());
 
 /* MIDDLEWARE */
-const checkNumber = (req, res, callback) => {
-  const data = req.params.number;
+const checarNumero = (req, res, callback) => {
+  const data = req.params.numero;
   console.log(data);
 
   if (isNaN(data) === true)
-    return res.status(400).json({ error: "Not a number!" });
+    return res.status(400).json({ error: "Não é um número!" });
   else if (data < -99999)
-    return res.status(400).json({ error: "Number is under -99999!" });
+    return res.status(400).json({ error: "Número menor que -99999!" });
   else if (data > 99999)
-    return res.status(400).json({ error: "Number is over 99999!" });
+    return res.status(400).json({ error: "Número maior que 99999!" });
 
   return callback();
 };
 
 /* ROUTES */
-server.get("/:number", checkNumber, (req, res) => {
+server.get("/:numero", checarNumero, (req, res) => {
   const unidades = [
     "",
     "um",
@@ -56,7 +56,7 @@ server.get("/:number", checkNumber, (req, res) => {
   ];
   const centenas = [
     "",
-    "cem",
+    "cento",
     "duzentos",
     "trezentos",
     "quatrocentos",
@@ -67,12 +67,27 @@ server.get("/:number", checkNumber, (req, res) => {
     "novecentos"
   ];
 
-  const number = req.params.number;
+  let numero = req.params.numero;
+  let wordsArr = [];
+
+  /* caso seja número negativo */
+  const negativo = "menos";
+  if (numero < 0) {
+    wordsArr.push(negativo);
+    numero = Math.abs(numero);
+    console.log(numero);
+  }
 
   /* caso seja 0 */
-  if (number == 0) return res.status(200).json({ extenso: "zero" });
+  if (numero == 0) return res.status(200).json({ extenso: "zero" });
 
-  return res.status(200).json({ extenso: number });
+  /* caso esteja entre 1 - 19 */
+  if (numero < 20) {
+    wordsArr.push(unidades[numero]);
+  }
+
+  const resultado = wordsArr.join(" ");
+  return res.status(200).json({ extenso: resultado });
 });
 
 server.listen(3000);
