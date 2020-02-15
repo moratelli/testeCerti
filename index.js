@@ -10,9 +10,9 @@ const checkNumber = (req, res, callback) => {
 
   if (isNaN(data) === true)
     return res.status(400).json({ error: "Not a number!" });
-  else if (data <= -100000)
+  else if (data < -99999)
     return res.status(400).json({ error: "Number is under -99999!" });
-  else if (data >= 100000)
+  else if (data > 99999)
     return res.status(400).json({ error: "Number is over 99999!" });
 
   return callback();
