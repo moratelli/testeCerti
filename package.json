@@ -1,0 +1,11 @@
+{
+  "name": "testeCerti",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/moratelli/testeCerti.git",
+  "author": "Pedro <pedromoratelli@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
