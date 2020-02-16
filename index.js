@@ -55,7 +55,7 @@ server.get("/:numero", checarNumero, (req, res) => {
     "noventa"
   ];
   const centenas = [
-    "",
+    "cem",
     "cento",
     "duzentos",
     "trezentos",
@@ -68,6 +68,7 @@ server.get("/:numero", checarNumero, (req, res) => {
   ];
 
   let numero = req.params.numero;
+  let numeroArr = ("" + numero).split("");
   let wordsArr = [];
 
   /* caso seja número negativo */
@@ -75,7 +76,7 @@ server.get("/:numero", checarNumero, (req, res) => {
   if (numero < 0) {
     wordsArr.push(negativo);
     numero = Math.abs(numero);
-    console.log(numero);
+    numeroArr = ("" + numero).split("");
   }
 
   /* caso seja 0 */
@@ -85,6 +86,15 @@ server.get("/:numero", checarNumero, (req, res) => {
   if (numero < 20) {
     wordsArr.push(unidades[numero]);
   }
+
+  /* caso esteja entre 20 e 99 */
+  if (numero > 20 && numeroArr.length == 2) {
+    if (numero % 10 == 0) wordsArr.push(dezenas[numeroArr[0]]);
+    else wordsArr.push(dezenas[numeroArr[0]] + " e " + unidades[numeroArr[1]]);
+  }
+
+  /* caso seja 100 */
+  if (numero == 100 && numeroArr.length == 3) wordsArr.push("");
 
   const resultado = wordsArr.join(" ");
   return res.status(200).json({ extenso: resultado });
