@@ -31,6 +31,9 @@ server.get("/:numero", checarNumero, (req, res) => {
     "sete",
     "oito",
     "nove",
+    "dez"
+  ];
+  const dezenasIrregulares = [
     "dez",
     "onze",
     "doze",
@@ -44,7 +47,7 @@ server.get("/:numero", checarNumero, (req, res) => {
   ];
   const dezenas = [
     "",
-    "",
+    "dez",
     "vinte",
     "trinta",
     "quarenta",
@@ -82,9 +85,14 @@ server.get("/:numero", checarNumero, (req, res) => {
   /* caso seja 0 */
   if (numero == 0) return res.status(200).json({ extenso: "zero" });
 
-  /* caso esteja entre 1 - 19 */
-  if (numero < 20) {
+  /* caso esteja entre 1 - 10 */
+  if (numero < 10) {
     wordsArr.push(unidades[numero]);
+  }
+
+  /* caso esteja entre 11 - 19 */
+  if (numero < 19) {
+    wordsArr.push(dezenasIrregulares[numeroArr[1]]);
   }
 
   /* caso esteja entre 20 e 99 */
@@ -93,14 +101,16 @@ server.get("/:numero", checarNumero, (req, res) => {
     else wordsArr.push(`${dezenas[numeroArr[0]]} e ${unidades[numeroArr[1]]}`);
   }
 
-  /* caso seja 100 */
-  if (numero == 100 && numeroArr.length == 3) wordsArr.push("cem");
-
-  /* caso esteja entre 101 e 999 */
-  if (numero > 100 && numeroArr.length == 3) {
-    if (numero % 100 == 0) wordsArr.push(centenas[numeroArr[0]]);
+  /* caso esteja entre 100 e 999 */
+  if (numero >= 100 && numeroArr.length == 3) {
+    if (numero == 100) wordsArr.push("cem");
+    else if (numero % 100 == 0) wordsArr.push(centenas[numeroArr[0]]);
     else if (numeroArr[2] == 0)
       wordsArr.push(`${centenas[numeroArr[0]]} e ${dezenas[numeroArr[1]]}`);
+    else if (numeroArr[1] < 2)
+      wordsArr.push(
+        `${centenas[numeroArr[0]]} e ${dezenasIrregulares[numeroArr[2]]}`
+      );
     else
       wordsArr.push(
         `${centenas[numeroArr[0]]} e ${dezenas[numeroArr[0]]} e ${
