@@ -55,7 +55,7 @@ server.get("/:numero", checarNumero, (req, res) => {
     "noventa"
   ];
   const centenas = [
-    "cem",
+    "",
     "cento",
     "duzentos",
     "trezentos",
@@ -90,11 +90,24 @@ server.get("/:numero", checarNumero, (req, res) => {
   /* caso esteja entre 20 e 99 */
   if (numero > 20 && numeroArr.length == 2) {
     if (numero % 10 == 0) wordsArr.push(dezenas[numeroArr[0]]);
-    else wordsArr.push(dezenas[numeroArr[0]] + " e " + unidades[numeroArr[1]]);
+    else wordsArr.push(`${dezenas[numeroArr[0]]} e ${unidades[numeroArr[1]]}`);
   }
 
   /* caso seja 100 */
-  if (numero == 100 && numeroArr.length == 3) wordsArr.push("");
+  if (numero == 100 && numeroArr.length == 3) wordsArr.push("cem");
+
+  /* caso esteja entre 101 e 999 */
+  if (numero > 100 && numeroArr.length == 3) {
+    if (numero % 100 == 0) wordsArr.push(centenas[numeroArr[0]]);
+    else if (numeroArr[2] == 0)
+      wordsArr.push(`${centenas[numeroArr[0]]} e ${dezenas[numeroArr[1]]}`);
+    else
+      wordsArr.push(
+        `${centenas[numeroArr[0]]} e ${dezenas[numeroArr[0]]} e ${
+          unidades[numeroArr[1]]
+        }`
+      );
+  }
 
   const resultado = wordsArr.join(" ");
   return res.status(200).json({ extenso: resultado });
