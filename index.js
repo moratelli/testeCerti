@@ -105,9 +105,9 @@ server.get("/:numero", checarNumero, (req, res) => {
   if (numero >= 100 && numeroArr.length == 3) {
     if (numero == 100) wordsArr.push("cem");
     else if (numero % 100 == 0) wordsArr.push(centenas[numeroArr[0]]);
-    else if (numeroArr[2] == 0)
+    else if (numeroArr % 10 == 0)
       wordsArr.push(`${centenas[numeroArr[0]]} e ${dezenas[numeroArr[1]]}`);
-    else if (numeroArr[1] < 2)
+    else if (numeroArr[1] == 1)
       wordsArr.push(
         `${centenas[numeroArr[0]]} e ${dezenasIrregulares[numeroArr[2]]}`
       );
@@ -119,8 +119,67 @@ server.get("/:numero", checarNumero, (req, res) => {
       );
   }
 
+  /* caso esteja entre 1000 e 9999 */
+  if (numero >= 1000 && numeroArr.length == 4) {
+    if (numero == 1000) wordsArr.push("mil");
+    else if (numero % 1000 == 0) wordsArr.push(`${unidades[numeroArr[0]]} mil`);
+    else if (numeroArr[1] == 1 && numeroArr[2] == 0 && numeroArr[3] == 0)
+      wordsArr.push(`${unidades[numeroArr[0]]} mil e cem`);
+    else if (numero % 100 == 0)
+      wordsArr.push(
+        `${unidades[numeroArr[0]]} mil e ${centenas[numeroArr[1]]}`
+      );
+    else if (numeroArr[1] == 0 && numeroArr[2] == 0)
+      wordsArr.push(
+        `${unidades[numeroArr[0]]} mil e ${unidades[numeroArr[3]]}`
+      );
+    else if (numeroArr[1] == 0) {
+      if (numero % 10 == 0)
+        wordsArr.push(
+          `${unidades[numeroArr[0]]} mil e ${dezenas[numeroArr[2]]}`
+        );
+      else if (numeroArr[2] == 1)
+        wordsArr.push(
+          `${unidades[numeroArr[0]]} mil e ${dezenasIrregulares[numeroArr[3]]}`
+        );
+      else
+        wordsArr.push(
+          `${unidades[numeroArr[0]]} mil e ${dezenas[numeroArr[2]]} e ${
+            unidades[numeroArr[3]]
+          }`
+        );
+    } else if (numero % 10 == 0)
+      wordsArr.push(
+        `${unidades[numeroArr[0]]} mil e ${centenas[numeroArr[1]]} e ${
+          dezenas[numeroArr[2]]
+        }`
+      );
+    else if (numeroArr[2] == 1)
+      wordsArr.push(
+        `${unidades[numeroArr[0]]} mil e ${centenas[numeroArr[1]]} e ${
+          dezenasIrregulares[numeroArr[3]]
+        }`
+      );
+    else if (numeroArr[2] == 0) {
+      wordsArr.push(
+        `${unidades[numeroArr[0]]} mil e ${centenas[numeroArr[1]]} e ${
+          unidades[numeroArr[3]]
+        }`
+      );
+    } else
+      wordsArr.push(
+        `${unidades[numeroArr[0]]} mil e ${centenas[numeroArr[1]]} e ${
+          dezenas[numeroArr[2]]
+        } e ${unidades[numeroArr[3]]}`
+      );
+  }
+
   const resultado = wordsArr.join(" ");
   return res.status(200).json({ extenso: resultado });
 });
 
 server.listen(3000);
+
+/* TRANSFORMAR ELSE/IF EM FUNCOES */
+/* FLIPAR NUMEROARR E COLOCAR PRIMEIRAS CASAS EM PRIMEIRO LUGAR */
+/* DESFLIPPAR APÓS TRABLHAR */
