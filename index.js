@@ -140,7 +140,7 @@ server.get("/:numero", checarNumero, (req, res) => {
 
   let resultado = cleanArray.join(" ");
 
-  return res.status(200).json({ cleanArray, extenso: resultado });
+  return res.status(200).json({ extenso: resultado });
 });
 
 server.listen(3000);
