@@ -6,7 +6,6 @@ server.use(express.json());
 /* MIDDLEWARE */
 const checarNumero = (req, res, callback) => {
   const data = req.params.numero;
-  console.log(data);
 
   if (isNaN(data) === true)
     return res.status(400).json({ error: "Não é um número!" });
@@ -71,7 +70,8 @@ server.get("/:numero", checarNumero, (req, res) => {
   ];
 
   let numero = req.params.numero;
-  let numeroArr = ("" + numero).split("");
+  console.log(numero);
+  let numeroArr = ("" + numero).split("").reverse();
   let wordsArr = [];
 
   /* caso seja número negativo */
@@ -79,100 +79,59 @@ server.get("/:numero", checarNumero, (req, res) => {
   if (numero < 0) {
     wordsArr.push(negativo);
     numero = Math.abs(numero);
-    numeroArr = ("" + numero).split("");
+    numeroArr = ("" + numero).split("").reverse();
+    console.log(numeroArr);
   }
 
-  /* caso seja 0 */
   if (numero == 0) return res.status(200).json({ extenso: "zero" });
 
-  /* caso esteja entre 1 - 10 */
-  if (numero < 10) {
-    wordsArr.push(unidades[numero]);
-  }
+  let stringifyUnidades = arr => {
+    wordsArr.push(unidades[arr[0]]);
+  };
 
-  /* caso esteja entre 11 - 19 */
-  if (numero < 19) {
-    wordsArr.push(dezenasIrregulares[numeroArr[1]]);
-  }
+  let stringifyDezenas = arr => {
+    let soma = arr[1] + arr[0];
 
-  /* caso esteja entre 20 e 99 */
-  if (numero > 20 && numeroArr.length == 2) {
-    if (numero % 10 == 0) wordsArr.push(dezenas[numeroArr[0]]);
-    else wordsArr.push(`${dezenas[numeroArr[0]]} e ${unidades[numeroArr[1]]}`);
-  }
+    if (soma < 10) stringifyUnidades(arr);
+    else if (soma % 10 == 0) wordsArr.push(dezenas[arr[1]]);
+    else if (soma <= 19) wordsArr.push(dezenasIrregulares[arr[0]]);
+    else {
+      wordsArr.push(dezenas[arr[1]]);
+      stringifyUnidades(arr[0]);
+    }
+  };
 
-  /* caso esteja entre 100 e 999 */
-  if (numero >= 100 && numeroArr.length == 3) {
-    if (numero == 100) wordsArr.push("cem");
-    else if (numero % 100 == 0) wordsArr.push(centenas[numeroArr[0]]);
-    else if (numeroArr % 10 == 0)
-      wordsArr.push(`${centenas[numeroArr[0]]} e ${dezenas[numeroArr[1]]}`);
-    else if (numeroArr[1] == 1)
-      wordsArr.push(
-        `${centenas[numeroArr[0]]} e ${dezenasIrregulares[numeroArr[2]]}`
-      );
-    else
-      wordsArr.push(
-        `${centenas[numeroArr[0]]} e ${dezenas[numeroArr[0]]} e ${
-          unidades[numeroArr[1]]
-        }`
-      );
-  }
+  let stringifyCentenas = arr => {
+    let num = arr[2] + arr[1] + arr[0];
+    if (num == 100) wordsArr.push("cem");
+    else if (num % 100 == 0) wordsArr.push(centenas[arr[2]]);
+    else {
+      wordsArr.push(centenas[arr[2]]);
+      stringifyDezenas(arr);
+    }
+  };
 
-  /* caso esteja entre 1000 e 9999 */
-  if (numero >= 1000 && numeroArr.length == 4) {
-    if (numero == 1000) wordsArr.push("mil");
-    else if (numero % 1000 == 0) wordsArr.push(`${unidades[numeroArr[0]]} mil`);
-    else if (numeroArr[1] == 1 && numeroArr[2] == 0 && numeroArr[3] == 0)
-      wordsArr.push(`${unidades[numeroArr[0]]} mil e cem`);
-    else if (numero % 100 == 0)
-      wordsArr.push(
-        `${unidades[numeroArr[0]]} mil e ${centenas[numeroArr[1]]}`
-      );
-    else if (numeroArr[1] == 0 && numeroArr[2] == 0)
-      wordsArr.push(
-        `${unidades[numeroArr[0]]} mil e ${unidades[numeroArr[3]]}`
-      );
-    else if (numeroArr[1] == 0) {
-      if (numero % 10 == 0)
-        wordsArr.push(
-          `${unidades[numeroArr[0]]} mil e ${dezenas[numeroArr[2]]}`
-        );
-      else if (numeroArr[2] == 1)
-        wordsArr.push(
-          `${unidades[numeroArr[0]]} mil e ${dezenasIrregulares[numeroArr[3]]}`
-        );
-      else
-        wordsArr.push(
-          `${unidades[numeroArr[0]]} mil e ${dezenas[numeroArr[2]]} e ${
-            unidades[numeroArr[3]]
-          }`
-        );
-    } else if (numero % 10 == 0)
-      wordsArr.push(
-        `${unidades[numeroArr[0]]} mil e ${centenas[numeroArr[1]]} e ${
-          dezenas[numeroArr[2]]
-        }`
-      );
-    else if (numeroArr[2] == 1)
-      wordsArr.push(
-        `${unidades[numeroArr[0]]} mil e ${centenas[numeroArr[1]]} e ${
-          dezenasIrregulares[numeroArr[3]]
-        }`
-      );
-    else if (numeroArr[2] == 0) {
-      wordsArr.push(
-        `${unidades[numeroArr[0]]} mil e ${centenas[numeroArr[1]]} e ${
-          unidades[numeroArr[3]]
-        }`
-      );
-    } else
-      wordsArr.push(
-        `${unidades[numeroArr[0]]} mil e ${centenas[numeroArr[1]]} e ${
-          dezenas[numeroArr[2]]
-        } e ${unidades[numeroArr[3]]}`
-      );
-  }
+  let stringifyMilhares = arr => {
+    let num = arr[3] + arr[2] + arr[1] + arr[0];
+    if (num % 1000 == 0) wordsArr.push(`${unidades[arr[3]]} mil`);
+    else {
+      wordsArr.push(`${unidades[arr[3]]} mil`);
+      stringifyCentenas(arr);
+    }
+  };
+
+  let stringifyDezenasMilhares = arr => {
+    let num = [arr[3], arr[4]];
+    stringifyDezenas(num);
+    wordsArr.push(`mil`);
+    stringifyCentenas(arr);
+  };
+
+  if (numeroArr.length == 1) stringifyUnidades(numeroArr);
+  else if (numeroArr.length == 2) stringifyDezenas(numeroArr);
+  else if (numeroArr.length == 3) stringifyCentenas(numeroArr);
+  else if (numeroArr.length == 4) stringifyMilhares(numeroArr);
+  else if (numeroArr.length == 5) stringifyDezenasMilhares(numeroArr);
 
   const resultado = wordsArr.join(" ");
   return res.status(200).json({ extenso: resultado });
