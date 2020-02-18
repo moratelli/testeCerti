@@ -91,53 +91,38 @@ server.get("/:numero", checarNumero, (req, res) => {
 
   let stringifyDezenas = arr => {
     let soma = arr[1] + arr[0];
-    console.log(soma);
 
     if (soma < 10) stringifyUnidades(arr);
     else if (soma % 10 == 0) wordsArr.push(dezenas[arr[1]]);
     else if (soma <= 19) wordsArr.push(dezenasIrregulares[arr[0]]);
     else {
-      wordsArr.push(`${dezenas[arr[1]]} e`);
+      wordsArr.push(dezenas[arr[1]]);
       stringifyUnidades(arr[0]);
     }
   };
 
   let stringifyCentenas = arr => {
-    if (numero == 100) wordsArr.push("cem");
-    else if (numero % 100 == 0) wordsArr.push(centenas[arr[2]]);
+    let num = arr[2] + arr[1] + arr[0];
+    if (num == 100) wordsArr.push("cem");
+    else if (num % 100 == 0) wordsArr.push(centenas[arr[2]]);
     else {
-      wordsArr.push(`${centenas[arr[2]]} e`);
+      wordsArr.push(centenas[arr[2]]);
       stringifyDezenas(arr);
+    }
+  };
+
+  let stringifyMilhares = arr => {
+    if (numero % 1000 == 0) wordsArr.push(`${unidades[arr[3]]} mil`);
+    else {
+      wordsArr.push(`${unidades[arr[3]]} mil`);
+      stringifyCentenas(arr);
     }
   };
 
   if (numeroArr.length == 1) stringifyUnidades(numeroArr);
   else if (numeroArr.length == 2) stringifyDezenas(numeroArr);
   else if (numeroArr.length == 3) stringifyCentenas(numeroArr);
-
-  /* caso esteja entre 1000 e 9999 */
-  if (numero >= 1000 && numeroArr.length == 4) {
-    let inicio = unidades[numeroArr[0]];
-    let final = [numeroArr[1], numeroArr[2], numeroArr[3]];
-
-    if (numero == 1000) wordsArr.push("mil");
-    else if (numero % 1000 == 0) wordsArr.push(`${inicio} mil`);
-    else if (numeroArr[1] == 0 && numeroArr[2] == 0)
-      wordsArr.push(`${inicio} mil e ${unidades[numeroArr[3]]}`);
-    else if (numeroArr[1] == 0) {
-      if (numero % 10 == 0)
-        wordsArr.push(`${inicio} mil e ${dezenas[numeroArr[2]]}`);
-      else if (numeroArr[2] == 1)
-        wordsArr.push(`${inicio} mil e ${dezenasIrregulares[numeroArr[3]]}`);
-      else
-        wordsArr.push(
-          `${inicio} mil e ${dezenas[numeroArr[2]]} e ${unidades[numeroArr[3]]}`
-        );
-    } else {
-      wordsArr.push(`${inicio} mil e`);
-      stringifyCentenas(final);
-    }
-  }
+  else if (numeroArr.length == 4) stringifyMilhares(numeroArr);
 
   const resultado = wordsArr.join(" ");
   return res.status(200).json({ extenso: resultado });
