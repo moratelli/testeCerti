@@ -112,17 +112,26 @@ server.get("/:numero", checarNumero, (req, res) => {
   };
 
   let stringifyMilhares = arr => {
-    if (numero % 1000 == 0) wordsArr.push(`${unidades[arr[3]]} mil`);
+    let num = arr[3] + arr[2] + arr[1] + arr[0];
+    if (num % 1000 == 0) wordsArr.push(`${unidades[arr[3]]} mil`);
     else {
       wordsArr.push(`${unidades[arr[3]]} mil`);
       stringifyCentenas(arr);
     }
   };
 
+  let stringifyDezenasMilhares = arr => {
+    let num = [arr[3], arr[4]];
+    stringifyDezenas(num);
+    wordsArr.push(`mil`);
+    stringifyCentenas(arr);
+  };
+
   if (numeroArr.length == 1) stringifyUnidades(numeroArr);
   else if (numeroArr.length == 2) stringifyDezenas(numeroArr);
   else if (numeroArr.length == 3) stringifyCentenas(numeroArr);
   else if (numeroArr.length == 4) stringifyMilhares(numeroArr);
+  else if (numeroArr.length == 5) stringifyDezenasMilhares(numeroArr);
 
   const resultado = wordsArr.join(" ");
   return res.status(200).json({ extenso: resultado });
