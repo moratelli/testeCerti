@@ -69,20 +69,18 @@ server.get("/:numero", checarNumero, (req, res) => {
     "novecentos"
   ];
 
-  let numero = req.params.numero;
-  console.log(numero);
+  const numero = req.params.numero;
   let numeroArr = ("" + numero).split("").reverse();
   let wordsArr = [];
 
   /* caso seja número negativo */
-  const negativo = "menos";
   if (numero < 0) {
-    wordsArr.push(negativo);
-    numero = Math.abs(numero);
-    numeroArr = ("" + numero).split("").reverse();
-    console.log(numeroArr);
+    const numeroPositivo = Math.abs(numero);
+    numeroArr = ("" + numeroPositivo).split("").reverse();
+    wordsArr.push("menos");
   }
 
+  /* caso o número seja 0 */
   if (numero == 0) return res.status(200).json({ extenso: "zero" });
 
   let stringifyUnidades = arr => {
@@ -90,23 +88,25 @@ server.get("/:numero", checarNumero, (req, res) => {
   };
 
   let stringifyDezenas = arr => {
-    let soma = arr[1] + arr[0];
+    let num = arr[1] + arr[0];
 
-    if (soma < 10) stringifyUnidades(arr);
-    else if (soma % 10 == 0) wordsArr.push(dezenas[arr[1]]);
-    else if (soma <= 19) wordsArr.push(dezenasIrregulares[arr[0]]);
+    if (num < 10) stringifyUnidades(arr);
+    else if (num % 10 == 0) wordsArr.push(dezenas[arr[1]]);
+    else if (num <= 19) wordsArr.push(dezenasIrregulares[arr[0]]);
     else {
-      wordsArr.push(dezenas[arr[1]]);
+      `${wordsArr.push(dezenas[arr[1]])} e`;
       stringifyUnidades(arr[0]);
     }
   };
 
   let stringifyCentenas = arr => {
     let num = arr[2] + arr[1] + arr[0];
-    if (num == 100) wordsArr.push("cem");
+
+    if (num < 100) stringifyDezenas(arr);
+    else if (num == 100) wordsArr.push("cem");
     else if (num % 100 == 0) wordsArr.push(centenas[arr[2]]);
     else {
-      wordsArr.push(centenas[arr[2]]);
+      wordsArr.push(`${centenas[arr[2]]} e`);
       stringifyDezenas(arr);
     }
   };
@@ -114,8 +114,11 @@ server.get("/:numero", checarNumero, (req, res) => {
   let stringifyMilhares = arr => {
     let num = arr[3] + arr[2] + arr[1] + arr[0];
     if (num % 1000 == 0) wordsArr.push(`${unidades[arr[3]]} mil`);
-    else {
-      wordsArr.push(`${unidades[arr[3]]} mil`);
+    else if ((arr[3] = 1)) {
+      wordsArr.push(`mil e`);
+      stringifyCentenas(arr);
+    } else {
+      wordsArr.push(`${unidades[arr[3]]} mil e`);
       stringifyCentenas(arr);
     }
   };
@@ -123,7 +126,7 @@ server.get("/:numero", checarNumero, (req, res) => {
   let stringifyDezenasMilhares = arr => {
     let num = [arr[3], arr[4]];
     stringifyDezenas(num);
-    wordsArr.push(`mil`);
+    wordsArr.push(`mil e`);
     stringifyCentenas(arr);
   };
 
@@ -133,12 +136,11 @@ server.get("/:numero", checarNumero, (req, res) => {
   else if (numeroArr.length == 4) stringifyMilhares(numeroArr);
   else if (numeroArr.length == 5) stringifyDezenasMilhares(numeroArr);
 
-  const resultado = wordsArr.join(" ");
-  return res.status(200).json({ extenso: resultado });
+  let cleanArray = wordsArr.filter(elem => elem != "");
+
+  let resultado = cleanArray.join(" ");
+
+  return res.status(200).json({ cleanArray, extenso: resultado });
 });
 
 server.listen(3000);
-
-/* TRANSFORMAR ELSE/IF EM FUNCOES */
-/* FLIPAR NUMEROARR E COLOCAR PRIMEIRAS CASAS EM PRIMEIRO LUGAR */
-/* DESFLIPPAR APÓS TRABLHAR */
