@@ -94,7 +94,7 @@ server.get("/:numero", checarNumero, (req, res) => {
     else if (num % 10 == 0) wordsArr.push(dezenas[arr[1]]);
     else if (num <= 19) wordsArr.push(dezenasIrregulares[arr[0]]);
     else {
-      `${wordsArr.push(dezenas[arr[1]])} e`;
+      wordsArr.push(`${dezenas[arr[1]]} e`);
       stringifyUnidades(arr[0]);
     }
   };
