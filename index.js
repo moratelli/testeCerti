@@ -9,7 +9,7 @@ const checarNumero = (req, res, callback) => {
 
   if (isNaN(data) === true)
     return res.status(400).json({ error: "Não é um número!" });
-  else if (Number.isInteger(data) === false)
+  else if (data % 1 != 0)
     return res.status(400).json({ error: "Não é um número inteiro!" });
   else if (data < -99999)
     return res.status(400).json({ error: "Número menor que -99999!" });
@@ -20,7 +20,6 @@ const checarNumero = (req, res, callback) => {
 };
 
 /* ROUTES */
-
 server.get("/:numero", checarNumero, (req, res) => {
   const unidades = [
     "",
