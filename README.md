@@ -20,7 +20,7 @@ Primeiramente, clone ou baixe este repositório.
 
 **Pré-requisitos:** [Docker](https://docs.docker.com/install/) instalado e ativo, conexão com a Internet.
 
-Execute o comando a seguir em um terminal para baixar a imagem do DockerHub:
+Execute o comando a seguir em um terminal para baixar a imagem do [DockerHub](https://hub.docker.com/repository/docker/pmtelli/testecerti/):
 
 ```docker
 docker pull pmtelli/testecerti:tagname
