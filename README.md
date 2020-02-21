@@ -18,27 +18,27 @@ Primeiramente, clone ou baixe este repositório.
 
 ### Opção 1: Instalação sem dependências locais
 
-**Pré-requisitos:** [Docker](https://docs.docker.com/install/) instalado e ativo.
+**Pré-requisitos:** [Docker](https://docs.docker.com/install/) instalado e ativo, conexão com a Internet.
 
-Na pasta do projeto, use o comando a seguir para construir a imagem:
+Execute o comando a seguir em um terminal para baixar a imagem do DockerHub:
 
 ```docker
-docker build -t moratelli/testecerti . 
+docker pull pmtelli/testecerti:tagname
 ```
 
-Após isso, use o seguinte comando para rodar o container Docker:
+Após isso, execute o seguinte comando para rodar o container Docker:
 
 ```docker
-docker run -p 3000:3000 -d moratelli/testecerti 
+docker run -p 3000:3000 pmtelli/testecerti:tagname
 ```
 
 ---
 
 ### Opção 2: Instalação com dependências locais
 
-**Pré-requisitos:** [Node.js](https://nodejs.org/en/download/) e [Yarn](https://yarnpkg.com).
+**Pré-requisitos:** [Node.js](https://nodejs.org/en/download/) e [Yarn](https://yarnpkg.com), conex
 
-Na pasta do projeto, use o comando ```yarn``` para instalar dependências locais. É preciso ter conexão com a Internet para conseguir baixar as dependências. Depois execute o comando ```yarn start``` para iniciar o servidor Node.js.
+Na pasta do projeto, execute o comando ```yarn``` para instalar dependências locais. Depois, execute o comando ```yarn start``` para iniciar o servidor Node.js.
 
 ## Uso
 
