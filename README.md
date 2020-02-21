@@ -13,9 +13,6 @@ Foi um desafio técnico para a Fundação CERTI, em Flórianópolis.
 
 ## Instalação
 
-Primeiramente, clone ou baixe este repositório.
-
-
 ### Opção 1: Instalação sem dependências locais
 
 **Pré-requisitos:** [Docker](https://docs.docker.com/install/) instalado e ativo, conexão com a Internet.
@@ -38,7 +35,7 @@ docker run -p 3000:3000 pmtelli/testecerti:tagname
 
 **Pré-requisitos:** [Node.js](https://nodejs.org/en/download/) e [Yarn](https://yarnpkg.com), conexão com a Internet.
 
-Na pasta do projeto, execute o comando ```yarn``` para instalar dependências locais. Depois, execute o comando ```yarn start``` para iniciar o servidor Node.js.
+Primeiramente, clone ou baixe este repositório. Na pasta do projeto, execute o comando ```yarn``` para instalar dependências locais. Depois, execute o comando ```yarn start``` para iniciar o servidor Node.js.
 
 ## Uso
 
