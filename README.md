@@ -36,7 +36,7 @@ docker run -p 3000:3000 pmtelli/testecerti:tagname
 
 ### Opção 2: Instalação com dependências locais
 
-**Pré-requisitos:** [Node.js](https://nodejs.org/en/download/) e [Yarn](https://yarnpkg.com), conex
+**Pré-requisitos:** [Node.js](https://nodejs.org/en/download/) e [Yarn](https://yarnpkg.com), conexão com a Internet.
 
 Na pasta do projeto, execute o comando ```yarn``` para instalar dependências locais. Depois, execute o comando ```yarn start``` para iniciar o servidor Node.js.
 
